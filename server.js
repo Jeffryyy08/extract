@@ -64,22 +64,27 @@ app.post('/extract-eurocomp', async (req, res) => {
       const nameElement = document.querySelector('#main_div > div > div.card.hoverable.mb-5.p-2 > div.card-body > div > div.col-lg-7.p-3 > h3 strong');
       const name = nameElement ? nameElement.innerText.trim() : '';
       
-      // ✅ Extraer precio en dólares (versión robusta)
+      // ✅ Extraer precio en dólares (versión robusta y válida)
 let priceText = '';
 const priceSelectors = [
   '#main_div > div > div.card.hoverable.mb-5.p-2 > div.card-body > div > div.col-lg-7.p-3 > h4 > strong',
   '.price',
   'span.price',
   'div.price',
-  'strong:contains("$")',
+  'strong[data-price]',
   '[data-price]'
 ];
 
 for (const selector of priceSelectors) {
-  const el = document.querySelector(selector);
-  if (el) {
-    priceText = el.innerText.trim();
-    if (priceText) break;
+  try {
+    const el = document.querySelector(selector);
+    if (el) {
+      priceText = el.innerText.trim();
+      if (priceText) break;
+    }
+  } catch (e) {
+    // Ignorar selectores inválidos
+    continue;
   }
 }
 
