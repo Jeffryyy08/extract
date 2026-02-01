@@ -64,26 +64,45 @@ app.post('/extract-eurocomp', async (req, res) => {
       const nameElement = document.querySelector('#main_div > div > div.card.hoverable.mb-5.p-2 > div.card-body > div > div.col-lg-7.p-3 > h3 strong');
       const name = nameElement ? nameElement.innerText.trim() : '';
       
-      // Precio
-      const priceElement = document.querySelector('#main_div > div > div.card.hoverable.mb-5.p-2 > div.card-body > div > div.col-lg-7.p-3 > h4 > strong');
-      let priceUsd = '';
-      let priceCrc = '';
+      // ✅ Extraer precio en dólares (versión robusta)
+let priceText = '';
+const priceSelectors = [
+  '#main_div > div > div.card.hoverable.mb-5.p-2 > div.card-body > div > div.col-lg-7.p-3 > h4 > strong',
+  '.price',
+  'span.price',
+  'div.price',
+  'strong:contains("$")',
+  '[data-price]'
+];
+
+for (const selector of priceSelectors) {
+  const el = document.querySelector(selector);
+  if (el) {
+    priceText = el.innerText.trim();
+    if (priceText) break;
+  }
+}
+
+let priceUsd = '';
+let priceCrc = '';
+
+if (priceText) {
+  // Extraer número (ej: "$185.00" → "185.00")
+  const priceMatch = priceText.match(/[\d,\.]+/);
+  if (priceMatch) {
+    const cleanPrice = priceMatch[0].replace(/,/g, '');
+    const usdNum = parseFloat(cleanPrice);
+    
+    if (!isNaN(usdNum) && usdNum > 0) {
+      priceUsd = cleanPrice; // Mantener formato original
       
-      if (priceElement) {
-        const priceText = priceElement.innerText.trim();
-        const priceMatch = priceText.match(/[\d,\.]+/);
-        if (priceMatch) {
-          const cleanPrice = priceMatch[0].replace(/,/g, '');
-          const usdNum = parseFloat(cleanPrice);
-          if (!isNaN(usdNum) && usdNum > 0) {
-            priceUsd = cleanPrice;
-            // Conversión: USD → CRC (505) + IVA (13%)
-            const crcWithoutIva = usdNum * 505;
-            const crcWithIva = crcWithoutIva * 1.13;
-            priceCrc = Math.round(crcWithIva).toString();
-          }
-        }
-      }
+      // 🔢 Fórmula: USD + 13% → × 505
+      const usdWithIva = usdNum * 1.13;     // Sumar 13% de IVA al USD
+      const crcFinal = usdWithIva * 505;     // Convertir a colones
+      priceCrc = Math.round(crcFinal).toString(); // Redondear
+    }
+  }
+}
       
       // Imagen
       const imgElement = document.querySelector('#main_div > div > div.card.hoverable.mb-5.p-2 > div.card-body > div > div.col-lg-5.p-3 > img');
