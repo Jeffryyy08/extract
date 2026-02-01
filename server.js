@@ -1,6 +1,18 @@
 // server.js
 const express = require('express');
+const cors = require('cors');
+
 const app = express();
+
+// ✅ Configurar CORS para permitir tu dominio
+app.use(cors({
+  origin: [
+    'http://localhost:3000',           // Para desarrollo local
+    'https://https://teknocr1ver.vercel.app/',   // Tu dominio de Vercel (reemplaza)
+    'https://www.teknocr.com'       // Tu dominio personal (si tienes)
+  ],
+  credentials: true
+}));
 
 // Middleware para parsear JSON
 app.use(express.json({ limit: '10mb' }));
