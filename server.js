@@ -63,7 +63,7 @@ app.post('/extract-eurocomp', async (req, res) => {
       
       // Descripción
       const descEl = document.querySelector('#main_div > div > div.card.hoverable.mb-5.p-2 > div.card-body > div > div.col-lg-7.p-3 > p');
-      const description = descEl ? descEl.innerText.trim().substring(0, 200) : '';
+      const description = descEl ? descEl.innerText.trim() : '';
 
       return {
         name,
