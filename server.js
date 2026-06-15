@@ -54,15 +54,15 @@ app.post('/extract-eurocomp', async (req, res) => {
     // ✅ Extraer SOLO nombre, imagen y descripción
     const data = await page.evaluate(() => {
       // Nombre
-      const nameEl = document.querySelector('#main_div > div > div.card.hoverable.mb-5.p-2 > div.card-body > div > div.col-lg-7.p-3 > h3 strong');
+      const nameEl = document.querySelector('#main_div > div > div.card.cartv2-card.cartv2-shop-card > div > div > div.card.itemshop-plus-main.mb-4.border-0 > div.card-body.p-3.p-xl-4 > div > div.col-lg-7.p-3.itemshop-plus-info-col > h3 > strong');
       const name = nameEl ? nameEl.innerText.trim() : '';
       
       // Imagen
-      const imgEl = document.querySelector('#main_div > div > div.card.hoverable.mb-5.p-2 > div.card-body > div > div.col-lg-5.p-3 > img');
+      const imgEl = document.querySelector('#main_div > div > div.card.cartv2-card.cartv2-shop-card > div > div > div.card.itemshop-plus-main.mb-4.border-0 > div.card-body.p-3.p-xl-4 > div > div.col-lg-5.p-3.itemshop-plus-media-col > img');
       const image = imgEl ? imgEl.src : '';
       
       // Descripción
-      const descEl = document.querySelector('#main_div > div > div.card.hoverable.mb-5.p-2 > div.card-body > div > div.col-lg-7.p-3 > p');
+      const descEl = document.querySelector('#main_div > div > div.card.cartv2-card.cartv2-shop-card > div > div > div.card.itemshop-plus-main.mb-4.border-0 > div.card-body.p-3.p-xl-4 > div > div.col-lg-7.p-3.itemshop-plus-info-col > div.itemshop-plus-price-panel.mb-3 > p');
       const description = descEl ? descEl.innerText.trim() : '';
 
       return {
